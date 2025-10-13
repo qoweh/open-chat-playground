@@ -40,7 +40,7 @@ This page describes how to run OpenChat Playground (OCP) with [Anthropic Claude]
 
     > For more details about Anthropic API keys, refer to the doc, [Anthropic API Documentation](https://docs.anthropic.com/claude/reference/getting-started-with-the-api).
 
-1. Run the app. The default model OCP uses is [Claude 3 Opus](https://www.anthropic.com/claude).
+1. Run the app. The default model OCP uses is [Claude Sonnet 4](https://www-cdn.anthropic.com/6be99a52cb68eb70eb9572b4cafad13df32ed995.pdf).
 
     ```bash
     # bash/zsh
@@ -54,20 +54,20 @@ This page describes how to run OpenChat Playground (OCP) with [Anthropic Claude]
         --connector-type Anthropic
     ```
 
-   Alternatively, if you want to run with a different model, say [Claude 3 Sonnet](https://www.anthropic.com/claude), other than the default one, you can specify it as an argument:
+   Alternatively, if you want to run with a different model, say [Claude Opus 4.1](http://www.anthropic.com/claude-opus-4-1-system-card), other than the default one, you can specify it as an argument:
 
     ```bash
     # bash/zsh
     dotnet run --project $REPOSITORY_ROOT/src/OpenChat.PlaygroundApp -- \
         --connector-type Anthropic \
-        --model claude-3-sonnet-20240229
+        --model claude-opus-4-1
     ```
 
     ```powershell
     # PowerShell
     dotnet run --project $REPOSITORY_ROOT/src/OpenChat.PlaygroundApp -- `
         --connector-type Anthropic `
-        --model claude-3-sonnet-20240229
+        --model claude-opus-4-1
     ```
 
 1. Open your web browser, navigate to `http://localhost:5280`, and enter prompts.
@@ -100,7 +100,7 @@ This page describes how to run OpenChat Playground (OCP) with [Anthropic Claude]
                 Select-String -NotMatch '^//(BEGIN|END)' | ConvertFrom-Json).'Anthropic:ApiKey'
     ```
 
-1. Run the app. The default model OCP uses is [Claude 3 Opus](https://www.anthropic.com/claude).
+1. Run the app. The default model OCP uses is [Claude Sonnet 4](https://www-cdn.anthropic.com/6be99a52cb68eb70eb9572b4cafad13df32ed995.pdf).
 
     ```bash
     # bash/zsh - from locally built container
@@ -128,20 +128,20 @@ This page describes how to run OpenChat Playground (OCP) with [Anthropic Claude]
         --api-key $API_KEY
     ```
 
-   Alternatively, if you want to run with a different model, say [Claude 3 Sonnet](https://www.anthropic.com/claude), other than the default one, you can specify it as an argument:
+   Alternatively, if you want to run with a different model, say [Claude Opus 4.1](http://www.anthropic.com/claude-opus-4-1-system-card), other than the default one, you can specify it as an argument:
 
     ```bash
     # bash/zsh - from locally built container with custom model
     docker run -i --rm -p 8080:8080 openchat-playground:latest --connector-type Anthropic \
         --api-key $API_KEY \
-        --model claude-3-sonnet-20240229
+        --model claude-opus-4-1
     ```
 
     ```powershell
     # PowerShell - from locally built container with custom model
     docker run -i --rm -p 8080:8080 openchat-playground:latest --connector-type Anthropic `
         --api-key $API_KEY `
-        --model claude-3-sonnet-20240229
+        --model claude-opus-4-1
     ```
 
 1. Open your web browser, navigate to `http://localhost:8080`, and enter prompts.
@@ -194,10 +194,10 @@ This page describes how to run OpenChat Playground (OCP) with [Anthropic Claude]
     azd env set ANTHROPIC_API_KEY $API_KEY
     ```
 
-   The default model OCP uses is [Claude 3 Opus](https://www.anthropic.com/claude). If you want to run with a different model, say [Claude 3 Sonnet](https://www.anthropic.com/claude), other than the default one, add it to azd environment variables.
+   The default model OCP uses is [Claude Sonnet 4](https://www-cdn.anthropic.com/6be99a52cb68eb70eb9572b4cafad13df32ed995.pdf). If you want to run with a different model, say [Claude Opus 4.1](http://www.anthropic.com/claude-opus-4-1-system-card), other than the default one, add it to azd environment variables.
 
     ```bash
-    azd env set ANTHROPIC_MODEL claude-3-sonnet-20240229
+    azd env set ANTHROPIC_MODEL claude-opus-4-1
     ```
 
 1. Set the connector type to `Anthropic`.
