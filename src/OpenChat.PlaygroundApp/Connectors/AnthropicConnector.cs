@@ -40,12 +40,16 @@ public class AnthropicConnector(AppSettings settings) : LanguageModelConnector(s
     {
         var settings = this.Settings as AnthropicSettings;
 
-        var apiKey = settings?.ApiKey ?? throw new InvalidOperationException("Missing configuration: Anthropic:ApiKey.");
+        var apiKey = settings?.ApiKey;
+        if (string.IsNullOrWhiteSpace(apiKey) == true)
+        {
+            throw new InvalidOperationException("Missing configuration: Anthropic:ApiKey.");
+        }
 
         var client = new AnthropicClient(apiKey);
         var chatClient = client.Messages;
 
-        Console.WriteLine($"The {this._appSettings.ConnectorType} connector created with model: {settings.Model}");
+        Console.WriteLine($"The {this._appSettings.ConnectorType} connector created with model: {settings!.Model}");
 
         return await Task.FromResult(chatClient).ConfigureAwait(false);
     }
