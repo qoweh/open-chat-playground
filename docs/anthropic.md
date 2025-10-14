@@ -1,6 +1,6 @@
-# OpenChat Playground with Anthropic Claude
+# OpenChat Playground with Anthropic
 
-This page describes how to run OpenChat Playground (OCP) with [Anthropic Claude](https://www.anthropic.com/claude) integration.
+This page describes how to run OpenChat Playground (OCP) with [Anthropic models](https://docs.claude.com/en/docs/about-claude/models) integration.
 
 ## Get the repository root
 
