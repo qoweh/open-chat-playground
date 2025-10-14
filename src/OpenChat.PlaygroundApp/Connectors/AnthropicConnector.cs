@@ -39,15 +39,25 @@ public class AnthropicConnector(AppSettings settings) : LanguageModelConnector(s
     public override async Task<IChatClient> GetChatClientAsync()
     {
         var settings = this.Settings as AnthropicSettings;
-
         var apiKey = settings?.ApiKey;
+    
         if (string.IsNullOrWhiteSpace(apiKey) == true)
         {
             throw new InvalidOperationException("Missing configuration: Anthropic:ApiKey.");
         }
 
-        var client = new AnthropicClient(apiKey);
-        var chatClient = client.Messages;
+        var client = new AnthropicClient() { Auth = new APIAuthentication(apiKey) };
+
+        var chatClient = client.Messages
+                                .AsBuilder()
+                                .UseFunctionInvocation()
+                                .Use((messages, options, next, cancellationToken) =>
+                                {
+                                    options!.ModelId = settings!.Model;
+                                    options.MaxOutputTokens ??= 1000;
+                                    return next(messages, options, cancellationToken);
+                                })
+                                .Build();
 
         Console.WriteLine($"The {this._appSettings.ConnectorType} connector created with model: {settings!.Model}");
 
