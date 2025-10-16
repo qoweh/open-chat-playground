@@ -165,9 +165,10 @@ public class ArgumentOptionsTests
         var config = BuildConfig((key, value));
         var args = Array.Empty<string>();
 
-        var ex = Assert.Throws<InvalidOperationException>(() => ArgumentOptions.Parse(config, args));
+        var action = () => ArgumentOptions.Parse(config, args);
 
-        ex.Message.ShouldContain($"{value}ArgumentOptions");
+        action.ShouldThrow<InvalidOperationException>()
+            .Message.ShouldContain($"{value}ArgumentOptions");
     }
 
     [Trait("Category", "UnitTest")]
@@ -190,7 +191,7 @@ public class ArgumentOptionsTests
     [InlineData(AppSettingConstants.ConnectorType, "AzureAIFoundry", ConnectorType.AzureAIFoundry)]
     [InlineData(AppSettingConstants.ConnectorType, "GitHubModels", ConnectorType.GitHubModels)]
     [InlineData(AppSettingConstants.ConnectorType, "GoogleVertexAI", ConnectorType.GoogleVertexAI)]
-    // [InlineData(AppSettingConstants.ConnectorType, "DockerModelRunner", ConnectorType.DockerModelRunner)]
+    [InlineData(AppSettingConstants.ConnectorType, "DockerModelRunner", ConnectorType.DockerModelRunner)]
     [InlineData(AppSettingConstants.ConnectorType, "FoundryLocal", ConnectorType.FoundryLocal)]
     [InlineData(AppSettingConstants.ConnectorType, "HuggingFace", ConnectorType.HuggingFace)]
     [InlineData(AppSettingConstants.ConnectorType, "Ollama", ConnectorType.Ollama)]
@@ -217,11 +218,11 @@ public class ArgumentOptionsTests
     [InlineData(AppSettingConstants.ConnectorType, "AzureAIFoundry", "OpenAI", ConnectorType.OpenAI)]
     // [InlineData(AppSettingConstants.ConnectorType, "GitHubModels", "Naver", ConnectorType.Naver)]
     [InlineData(AppSettingConstants.ConnectorType, "GoogleVertexAI", "LG", ConnectorType.LG)]
-    // [InlineData(AppSettingConstants.ConnectorType, "DockerModelRunner", "Anthropic", ConnectorType.Anthropic)]
+    [InlineData(AppSettingConstants.ConnectorType, "DockerModelRunner", "Anthropic", ConnectorType.Anthropic)]
     [InlineData(AppSettingConstants.ConnectorType, "FoundryLocal", "Ollama", ConnectorType.Ollama)]
     [InlineData(AppSettingConstants.ConnectorType, "HuggingFace", "Ollama", ConnectorType.Ollama)]
     [InlineData(AppSettingConstants.ConnectorType, "Ollama", "FoundryLocal", ConnectorType.FoundryLocal)]
-    // [InlineData(AppSettingConstants.ConnectorType, "Anthropic", "DockerModelRunner", ConnectorType.DockerModelRunner)]
+    [InlineData(AppSettingConstants.ConnectorType, "Anthropic", "DockerModelRunner", ConnectorType.DockerModelRunner)]
     [InlineData(AppSettingConstants.ConnectorType, "LG", "GoogleVertexAI", ConnectorType.GoogleVertexAI)]
     [InlineData(AppSettingConstants.ConnectorType, "Naver", "GitHubModels", ConnectorType.GitHubModels)]
     [InlineData(AppSettingConstants.ConnectorType, "OpenAI", "AzureAIFoundry", ConnectorType.AzureAIFoundry)]
@@ -244,7 +245,7 @@ public class ArgumentOptionsTests
     [InlineData(AppSettingConstants.ConnectorType, "AzureAIFoundry", "MaaS", ConnectorType.AzureAIFoundry)]
     [InlineData(AppSettingConstants.ConnectorType, "GitHubModels", "MaaS", ConnectorType.GitHubModels)]
     [InlineData(AppSettingConstants.ConnectorType, "GoogleVertexAI", "MaaS", ConnectorType.GoogleVertexAI)]
-    // [InlineData(AppSettingConstants.ConnectorType, "DockerModelRunner", "Local", ConnectorType.DockerModelRunner)]
+    [InlineData(AppSettingConstants.ConnectorType, "DockerModelRunner", "Local", ConnectorType.DockerModelRunner)]
     [InlineData(AppSettingConstants.ConnectorType, "FoundryLocal", "Local", ConnectorType.FoundryLocal)]
     [InlineData(AppSettingConstants.ConnectorType, "HuggingFace", "Local", ConnectorType.HuggingFace)]
     [InlineData(AppSettingConstants.ConnectorType, "Ollama", "Local", ConnectorType.Ollama)]
@@ -282,25 +283,125 @@ public class ArgumentOptionsTests
 
     [Trait("Category", "UnitTest")]
     [Theory]
-    [InlineData(typeof(AmazonBedrockArgumentOptions))]
-    [InlineData(typeof(AzureAIFoundryArgumentOptions))]
-    [InlineData(typeof(GitHubModelsArgumentOptions))]
-    [InlineData(typeof(GoogleVertexAIArgumentOptions))]
-    // [InlineData(typeof(DockerModelRunnerArgumentOptions))]
-    [InlineData(typeof(FoundryLocalArgumentOptions))]
-    [InlineData(typeof(HuggingFaceArgumentOptions))]
-    [InlineData(typeof(OllamaArgumentOptions))]
-    [InlineData(typeof(AnthropicArgumentOptions))]
-    [InlineData(typeof(LGArgumentOptions))]
-    // [InlineData(typeof(NaverArgumentOptions))]
-    [InlineData(typeof(OpenAIArgumentOptions))]
-    [InlineData(typeof(UpstageArgumentOptions))]
-    public void Given_Concrete_ArgumentOptions_When_Checking_Inheritance_Then_Should_Inherit_From_ArgumentOptions(Type type)
+    [InlineData(AppSettingConstants.ConnectorType, "AmazonBedrock", "AmazonBedrock:ModelId", "test-model-id", "test-model-id")]
+    [InlineData(AppSettingConstants.ConnectorType, "AzureAIFoundry", "AzureAIFoundry:DeploymentName", "test-deployment", "test-deployment")]
+    [InlineData(AppSettingConstants.ConnectorType, "GitHubModels", "GitHubModels:Model", "test-github-model", "test-github-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "GoogleVertexAI", "GoogleVertexAI:Model", "test-vertex-model", "test-vertex-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "FoundryLocal", "FoundryLocal:Alias", "test-alias", "test-alias")]
+    [InlineData(AppSettingConstants.ConnectorType, "HuggingFace", "HuggingFace:Model", "test-hf-model", "test-hf-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "Ollama", "Ollama:Model", "test-ollama-model", "test-ollama-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "Anthropic", "Anthropic:Model", "test-anthropic-model", "test-anthropic-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "LG", "LG:Model", "test-lg-model", "test-lg-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "OpenAI", "OpenAI:Model", "test-openai-model", "test-openai-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "Upstage", "Upstage:Model", "test-upstage-model", "test-upstage-model")]
+    public void Given_ConnectorType_With_ModelConfig_When_Parse_Invoked_Then_It_Should_Set_Model_Property(
+        string connectorKey, string connectorValue, string modelKey, string modelValue, string expectedModel)
     {
+        // Arrange
+        var config = BuildConfig((connectorKey, connectorValue), (modelKey, modelValue));
+        var args = Array.Empty<string>();
+
         // Act
-        var isSubclass = type.IsSubclassOf(typeof(ArgumentOptions));
+        var settings = ArgumentOptions.Parse(config, args);
 
         // Assert
-        isSubclass.ShouldBeTrue();
+        settings.Model.ShouldBe(expectedModel);
+    }
+
+    [Trait("Category", "UnitTest")]
+    [Theory]
+    [InlineData(AppSettingConstants.ConnectorType, "AmazonBedrock")]
+    [InlineData(AppSettingConstants.ConnectorType, "AzureAIFoundry")]
+    [InlineData(AppSettingConstants.ConnectorType, "GitHubModels")]
+    [InlineData(AppSettingConstants.ConnectorType, "GoogleVertexAI")]
+    [InlineData(AppSettingConstants.ConnectorType, "FoundryLocal")]
+    [InlineData(AppSettingConstants.ConnectorType, "HuggingFace")]
+    [InlineData(AppSettingConstants.ConnectorType, "Ollama")]
+    [InlineData(AppSettingConstants.ConnectorType, "Anthropic")]
+    [InlineData(AppSettingConstants.ConnectorType, "LG")]
+    [InlineData(AppSettingConstants.ConnectorType, "OpenAI")]
+    [InlineData(AppSettingConstants.ConnectorType, "Upstage")]
+    public void Given_ConnectorType_Without_ModelConfig_When_Parse_Invoked_Then_Model_Property_Should_Be_Null(
+        string connectorKey, string connectorValue)
+    {
+        // Arrange
+        var config = BuildConfig((connectorKey, connectorValue));
+        var args = Array.Empty<string>();
+
+        // Act
+        var settings = ArgumentOptions.Parse(config, args);
+
+        // Assert
+        settings.Model.ShouldBeNull();
+    }
+
+    [Trait("Category", "UnitTest")]
+    [Theory]
+    [InlineData(AppSettingConstants.ConnectorType, "AmazonBedrock", "AmazonBedrock:ModelId", "config-model", ArgumentOptionConstants.AmazonBedrock.ModelId, "arg-model", "arg-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "AzureAIFoundry", "AzureAIFoundry:DeploymentName", "config-deployment", ArgumentOptionConstants.AzureAIFoundry.DeploymentName, "arg-deployment", "arg-deployment")]
+    [InlineData(AppSettingConstants.ConnectorType, "GitHubModels", "GitHubModels:Model", "config-model", ArgumentOptionConstants.GitHubModels.Model, "arg-model", "arg-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "GoogleVertexAI", "GoogleVertexAI:Model", "config-model", ArgumentOptionConstants.GoogleVertexAI.Model, "arg-model", "arg-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "FoundryLocal", "FoundryLocal:Alias", "config-alias", ArgumentOptionConstants.FoundryLocal.Alias, "arg-alias", "arg-alias")]
+    [InlineData(AppSettingConstants.ConnectorType, "HuggingFace", "HuggingFace:Model", "config-model", ArgumentOptionConstants.HuggingFace.Model, "arg-model", "arg-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "Ollama", "Ollama:Model", "config-model", ArgumentOptionConstants.Ollama.Model, "arg-model", "arg-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "Anthropic", "Anthropic:Model", "config-model", ArgumentOptionConstants.Anthropic.Model, "arg-model", "arg-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "LG", "LG:Model", "config-model", ArgumentOptionConstants.LG.Model, "arg-model", "arg-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "OpenAI", "OpenAI:Model", "config-model", ArgumentOptionConstants.OpenAI.Model, "arg-model", "arg-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "Upstage", "Upstage:Model", "config-model", ArgumentOptionConstants.Upstage.Model, "arg-model", "arg-model")]
+    public void Given_ConnectorType_With_ModelConfig_And_Arguments_When_Parse_Invoked_Then_Arguments_Should_Override_Config(
+        string connectorKey, string connectorValue, string configModelKey, string configModelValue, 
+        string argumentKey, string argumentValue, string expectedModel)
+    {
+        // Arrange
+        var config = BuildConfig((connectorKey, connectorValue), (configModelKey, configModelValue));
+        var args = new[] { argumentKey, argumentValue };
+
+        // Act
+        var settings = ArgumentOptions.Parse(config, args);
+
+        // Assert
+        settings.Model.ShouldBe(expectedModel);
+    }
+
+    [Trait("Category", "UnitTest")]
+    [Theory]
+    [InlineData(AppSettingConstants.ConnectorType, "AmazonBedrock", "AmazonBedrock:ModelId", "config-model", "config-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "AzureAIFoundry", "AzureAIFoundry:DeploymentName", "config-deployment", "config-deployment")]
+    [InlineData(AppSettingConstants.ConnectorType, "GitHubModels", "GitHubModels:Model", "config-model", "config-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "GoogleVertexAI", "GoogleVertexAI:Model", "config-model", "config-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "FoundryLocal", "FoundryLocal:Alias", "config-alias", "config-alias")]
+    [InlineData(AppSettingConstants.ConnectorType, "HuggingFace", "HuggingFace:Model", "config-model", "config-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "Ollama", "Ollama:Model", "config-model", "config-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "Anthropic", "Anthropic:Model", "config-model", "config-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "LG", "LG:Model", "config-model", "config-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "OpenAI", "OpenAI:Model", "config-model", "config-model")]
+    [InlineData(AppSettingConstants.ConnectorType, "Upstage", "Upstage:Model", "config-model", "config-model")]
+    public void Given_ConnectorType_With_ModelConfig_And_UnrelatedArguments_When_Parse_Invoked_Then_Config_Should_Be_Used(
+        string connectorKey, string connectorValue, string configModelKey, string configModelValue, string expectedModel)
+    {
+        // Arrange
+        var config = BuildConfig((connectorKey, connectorValue), (configModelKey, configModelValue));
+        var args = new[] { "--unrelated-arg", "unrelated-value" };
+
+        // Act
+        var settings = ArgumentOptions.Parse(config, args);
+
+        // Assert
+        settings.Model.ShouldBe(expectedModel);
+    }
+
+    [Trait("Category", "UnitTest")]
+    [Fact]
+    public void Given_Unknown_ConnectorType_When_Parse_Invoked_Then_Model_Property_Should_Be_Null()
+    {
+        // Arrange
+        var config = BuildConfig();
+        var args = Array.Empty<string>();
+
+        // Act
+        var settings = ArgumentOptions.Parse(config, args);
+
+        // Assert
+        settings.Model.ShouldBeNull();
     }
 }
