@@ -17,7 +17,7 @@ public partial class AppSettings
 public class AnthropicSettings : LanguageModelSettings
 {
     /// <summary>
-    /// Gets or sets the API key for Anthropic Claude.
+    /// Gets or sets the API key for Anthropic.
     /// </summary>
     public string? ApiKey { get; set; }
 
@@ -25,4 +25,9 @@ public class AnthropicSettings : LanguageModelSettings
     /// Gets or sets the model name of Anthropic Claude.
     /// </summary>
     public string? Model { get; set; }
+
+    /// <summary>
+    /// Gets or sets the maximum number of output tokens for Anthropic Claude.
+    /// </summary>
+    public int? MaxTokens { get; set; }
 }
