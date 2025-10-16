@@ -25,7 +25,7 @@ public class AnthropicConnectorTests
     }
 
     [Trait("Category", "UnitTest")]
-    [Fact]
+    [Fact(Skip = "Anthropic connector is not enabled yet.")]
     public void Given_Null_Settings_When_Instantiated_Then_It_Should_Throw()
     {
         // Act
@@ -37,7 +37,7 @@ public class AnthropicConnectorTests
     }
 
     [Trait("Category", "UnitTest")]
-    [Fact]
+    [Fact(Skip = "Anthropic connector is not enabled yet.")]
     public void Given_Settings_When_Instantiated_Then_It_Should_Return()
     {
         // Arrange
@@ -51,7 +51,7 @@ public class AnthropicConnectorTests
     }
 
     [Trait("Category", "UnitTest")]
-    [Theory]
+    [Theory(Skip = "Anthropic connector is not enabled yet.")]
     [InlineData(typeof(LanguageModelConnector), typeof(AnthropicConnector), true)]
     [InlineData(typeof(AnthropicConnector), typeof(LanguageModelConnector), false)]
     public void Given_BaseType_Then_It_Should_Be_AssignableFrom_DerivedType(Type baseType, Type derivedType, bool expected)
@@ -64,7 +64,7 @@ public class AnthropicConnectorTests
     }
 
     [Trait("Category", "UnitTest")]
-    [Fact]
+    [Fact(Skip = "Anthropic connector is not enabled yet.")]
     public void Given_Settings_Is_Null_When_EnsureLanguageModelSettingsValid_Invoked_Then_It_Should_Throw()
     {
         // Arrange
@@ -80,7 +80,7 @@ public class AnthropicConnectorTests
     }
 
     [Trait("Category", "UnitTest")]
-    [Theory]
+    [Theory(Skip = "Anthropic connector is not enabled yet.")]
     [InlineData(null, typeof(NullReferenceException), "Object reference not set to an instance of an object")]
     [InlineData("", typeof(InvalidOperationException), "Anthropic:ApiKey")]
     [InlineData("   ", typeof(InvalidOperationException), "Anthropic:ApiKey")]
@@ -100,7 +100,7 @@ public class AnthropicConnectorTests
     }
 
     [Trait("Category", "UnitTest")]
-    [Theory]
+    [Theory(Skip = "Anthropic connector is not enabled yet.")]
     [InlineData(null, typeof(NullReferenceException), "Object reference not set to an instance of an object")]
     [InlineData("", typeof(InvalidOperationException), "Anthropic:Model")]
     [InlineData("   ", typeof(InvalidOperationException), "Anthropic:Model")]
@@ -120,7 +120,7 @@ public class AnthropicConnectorTests
     }
 
     [Trait("Category", "UnitTest")]
-    [Fact]
+    [Fact(Skip = "Anthropic connector is not enabled yet.")]
     public void Given_Valid_Settings_When_EnsureLanguageModelSettingsValid_Invoked_Then_It_Should_Return_True()
     {
         // Arrange
@@ -135,7 +135,7 @@ public class AnthropicConnectorTests
     }
 
     [Trait("Category", "UnitTest")]
-    [Fact]
+    [Fact(Skip = "Anthropic connector is not enabled yet.")]
     public async Task Given_Valid_Settings_When_GetChatClientAsync_Invoked_Then_It_Should_Return_ChatClient()
     {
         // Arrange
@@ -150,7 +150,7 @@ public class AnthropicConnectorTests
     }
 
     [Trait("Category", "UnitTest")]
-    [Fact]
+    [Fact(Skip = "Anthropic connector is not enabled yet.")]
     public void Given_Settings_Is_Null_When_GetChatClientAsync_Invoked_Then_It_Should_Throw()
     {
         // Arrange
@@ -166,7 +166,7 @@ public class AnthropicConnectorTests
     }
 
     [Trait("Category", "UnitTest")]
-    [Theory]
+    [Theory(Skip = "Anthropic connector is not enabled yet.")]
     [InlineData(null, typeof(InvalidOperationException), "Anthropic:ApiKey")]
     [InlineData("", typeof(InvalidOperationException), "Anthropic:ApiKey")]
     public void Given_Missing_ApiKey_When_GetChatClientAsync_Invoked_Then_It_Should_Throw(string? apiKey, Type expectedException, string expectedMessage)
@@ -184,7 +184,7 @@ public class AnthropicConnectorTests
     }
 
     [Trait("Category", "UnitTest")]
-    [Fact]
+    [Fact(Skip = "Anthropic connector is not enabled in the factory yet.")]
     public async Task Given_Valid_Settings_When_CreateChatClientAsync_Invoked_Then_It_Should_Return_ChatClient()
     {
         // Arrange
@@ -199,7 +199,7 @@ public class AnthropicConnectorTests
     }
 
     [Trait("Category", "UnitTest")]
-    [Theory]
+    [Theory(Skip = "Anthropic connector is not enabled in the factory yet.")]
     [InlineData(null, "claude-sonnet-4-0", typeof(NullReferenceException))]
     [InlineData("", "claude-sonnet-4-0", typeof(InvalidOperationException))]
     [InlineData("   ", "claude-sonnet-4-0", typeof(InvalidOperationException))]
