@@ -19,6 +19,12 @@ public class AnthropicArgumentOptions : ArgumentOptions
     /// </summary>
     public string? Model { get; set; }
 
+    /// <summary>
+    /// Gets or sets the maximum number of tokens for Anthropic.
+    /// Mirrors the 'max_tokens' option as 'MaxTokens'.
+    /// </summary>
+    public int? MaxTokens { get; set; }
+
     /// <inheritdoc/>
     protected override void ParseOptions(IConfiguration config, string[] args)
     {
@@ -26,9 +32,10 @@ public class AnthropicArgumentOptions : ArgumentOptions
         config.Bind(settings);
 
         var anthropic = settings.Anthropic;
-
+        
         this.ApiKey ??= anthropic?.ApiKey;
         this.Model ??= anthropic?.Model;
+        this.MaxTokens ??= anthropic?.MaxTokens;
 
         for (var i = 0; i < args.Length; i++)
         {
@@ -45,6 +52,16 @@ public class AnthropicArgumentOptions : ArgumentOptions
                     if (i + 1 < args.Length)
                     {
                         this.Model = args[++i];
+                    }
+                    break;
+
+                case ArgumentOptionConstants.Anthropic.MaxTokens:
+                    if (i + 1 < args.Length)
+                    {
+                        if (int.TryParse(args[++i], out var maxTokens))
+                        {
+                            this.MaxTokens = maxTokens;
+                        }
                     }
                     break;
 
