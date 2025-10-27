@@ -31,7 +31,7 @@ public class AnthropicArgumentOptions : ArgumentOptions
         config.Bind(settings);
 
         var anthropic = settings.Anthropic;
-        
+
         this.ApiKey ??= anthropic?.ApiKey;
         this.Model ??= anthropic?.Model;
         this.MaxTokens ??= anthropic?.MaxTokens;
