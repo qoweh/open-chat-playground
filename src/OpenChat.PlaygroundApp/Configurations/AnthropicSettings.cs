@@ -25,4 +25,9 @@ public class AnthropicSettings : LanguageModelSettings
     /// Gets or sets the model name of Anthropic Claude.
     /// </summary>
     public string? Model { get; set; }
+
+    /// <summary>
+    /// Gets or sets the maximum tokens for response.
+    /// </summary>
+    public int? MaxTokens { get; set; }
 }
