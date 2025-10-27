@@ -32,6 +32,11 @@ public class AnthropicConnector(AppSettings settings) : LanguageModelConnector(s
             throw new InvalidOperationException("Missing configuration: Anthropic:Model.");
         }
 
+        if (settings.MaxTokens.HasValue == false || settings.MaxTokens.Value <= 0)
+        {
+            throw new InvalidOperationException("Missing or invalid configuration: Anthropic:MaxTokens. Must be a positive integer.");
+        }
+
         return true;
     }
 
@@ -54,7 +59,7 @@ public class AnthropicConnector(AppSettings settings) : LanguageModelConnector(s
                                 .Use((messages, options, next, cancellationToken) =>
                                 {
                                     options!.ModelId = settings!.Model;
-                                    options.MaxOutputTokens ??= 1000;
+                                    options.MaxOutputTokens = settings.MaxTokens;
                                     return next(messages, options, cancellationToken);
                                 })
                                 .Build();
