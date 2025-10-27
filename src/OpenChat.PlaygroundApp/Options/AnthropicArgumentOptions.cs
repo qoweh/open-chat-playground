@@ -21,7 +21,6 @@ public class AnthropicArgumentOptions : ArgumentOptions
 
     /// <summary>
     /// Gets or sets the maximum number of tokens for Anthropic.
-    /// Mirrors the 'max_tokens' option as 'MaxTokens'.
     /// </summary>
     public int? MaxTokens { get; set; }
 
