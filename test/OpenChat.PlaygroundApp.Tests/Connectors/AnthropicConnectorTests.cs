@@ -4,6 +4,8 @@ using OpenChat.PlaygroundApp.Abstractions;
 using OpenChat.PlaygroundApp.Configurations;
 using OpenChat.PlaygroundApp.Connectors;
 
+namespace OpenChat.PlaygroundApp.Tests.Connectors;
+
 public class AnthropicConnectorTests
 {
     private const string ApiKey = "test-api-key";
@@ -11,6 +13,7 @@ public class AnthropicConnectorTests
     private const int MaxTokens = 512;
 
     private static AppSettings BuildAppSettings(string? apiKey = ApiKey, string? model = Model, int? maxTokens = MaxTokens)
+
     {
         return new AppSettings
         {

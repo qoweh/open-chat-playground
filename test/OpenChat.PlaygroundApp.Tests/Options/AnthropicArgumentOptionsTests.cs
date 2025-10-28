@@ -71,6 +71,8 @@ public class AnthropicArgumentOptionsTests
                    .AddInMemoryCollection(envDict!)      // Environment variables (medium priority)
                    .Build();
     }
+    
+    private static int? IntValueOf(string? value) => string.IsNullOrWhiteSpace(value) ? null : int.Parse(value);
 
     [Trait("Category", "UnitTest")]
     [Theory]
@@ -230,27 +232,6 @@ public class AnthropicArgumentOptionsTests
         settings.Anthropic.ShouldNotBeNull();
         settings.Anthropic.ApiKey.ShouldBe(ApiKey);
         settings.Anthropic.Model.ShouldBe(Model);
-    }
-
-    [Trait("Category", "UnitTest")]
-    [Theory]
-    [InlineData("--strange-model-name")]
-    public void Given_Anthropic_With_ModelName_StartingWith_Dashes_When_Parse_Invoked_Then_It_Should_Treat_As_Value(string cliModel)
-    {
-        // Arrange
-        var config = BuildConfigWithAnthropic();
-        var args = new[]
-        {
-            ArgumentOptionConstants.Anthropic.Model, cliModel
-        };
-
-        // Act
-        var settings = ArgumentOptions.Parse(config, args);
-
-        // Assert
-        settings.Anthropic.ShouldNotBeNull();
-        settings.Anthropic.ApiKey.ShouldBe(ApiKey);
-        settings.Anthropic.Model.ShouldBe(cliModel);
         settings.Anthropic.MaxTokens.ShouldBe(MaxTokens);
     }
 
@@ -273,6 +254,28 @@ public class AnthropicArgumentOptionsTests
         settings.Anthropic.ShouldNotBeNull();
         settings.Anthropic.ApiKey.ShouldBe(cliApiKey);
         settings.Anthropic.Model.ShouldBe(Model);
+        settings.Anthropic.MaxTokens.ShouldBe(MaxTokens);
+    }
+
+    [Trait("Category", "UnitTest")]
+    [Theory]
+    [InlineData("--strange-model-name")]
+    public void Given_Anthropic_With_ModelName_StartingWith_Dashes_When_Parse_Invoked_Then_It_Should_Treat_As_Value(string cliModel)
+    {
+        // Arrange
+        var config = BuildConfigWithAnthropic();
+        var args = new[]
+        {
+            ArgumentOptionConstants.Anthropic.Model, cliModel
+        };
+
+        // Act
+        var settings = ArgumentOptions.Parse(config, args);
+
+        // Assert
+        settings.Anthropic.ShouldNotBeNull();
+        settings.Anthropic.ApiKey.ShouldBe(ApiKey);
+        settings.Anthropic.Model.ShouldBe(cliModel);
         settings.Anthropic.MaxTokens.ShouldBe(MaxTokens);
     }
 
@@ -489,7 +492,7 @@ public class AnthropicArgumentOptionsTests
     public void Given_Anthropic_With_KnownArguments_When_Parse_Invoked_Then_Help_Should_Be_False(string cliApiKey, string cliModel, int cliMaxTokens)
     {
         // Arrange
-        var config = BuildConfigWithAnthropic(ApiKey, Model);
+        var config = BuildConfigWithAnthropic(ApiKey, Model, MaxTokens);
         var args = new[]
         {
             ArgumentOptionConstants.Anthropic.ApiKey, cliApiKey,
@@ -525,7 +528,7 @@ public class AnthropicArgumentOptionsTests
     [Trait("Category", "UnitTest")]
     [Theory]
     [InlineData("cli-api-key", "--unknown-flag")]
-    public void Given_Anthropic_With_Known_And_Unknown_Argument_When_Parse_Invoked_Then_Help_Should_Be_True(
+    public void Given_Anthropic_With_Known_ApiKey_And_Unknown_Argument_When_Parse_Invoked_Then_Help_Should_Be_True(
         string cliApiKey, string argument)
     {
         // Arrange
@@ -584,8 +587,8 @@ public class AnthropicArgumentOptionsTests
 
     [Trait("Category", "UnitTest")]
     [Theory]
-    [InlineData(null, null, ConnectorType.Unknown, false)]
-    public void Given_AnthropicArgumentOptions_When_Creating_Instance_Then_Should_Have_Correct_Properties(string? expectedApiKey, string? expectedModel, ConnectorType expectedConnectorType, bool expectedHelp)
+    [InlineData(null, null, null, ConnectorType.Unknown, false)]
+    public void Given_AnthropicArgumentOptions_When_Creating_Instance_Then_Should_Have_Correct_Properties(string? expectedApiKey, string? expectedModel, string? expectedMaxTokens, ConnectorType expectedConnectorType, bool expectedHelp)
     {
         // Act
         var options = new AnthropicArgumentOptions();
@@ -594,6 +597,7 @@ public class AnthropicArgumentOptionsTests
         options.ShouldNotBeNull();
         options.ApiKey.ShouldBe(expectedApiKey);
         options.Model.ShouldBe(expectedModel);
+        options.MaxTokens.ShouldBe(IntValueOf(expectedMaxTokens));
         options.ConnectorType.ShouldBe(expectedConnectorType);
         options.Help.ShouldBe(expectedHelp);
     }

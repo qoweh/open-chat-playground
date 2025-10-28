@@ -1,12 +1,15 @@
-using Anthropic.SDK;
-
 using Microsoft.Extensions.AI;
+
+using Anthropic.SDK;
 
 using OpenChat.PlaygroundApp.Abstractions;
 using OpenChat.PlaygroundApp.Configurations;
 
 namespace OpenChat.PlaygroundApp.Connectors;
 
+/// <summary>
+/// This represents the connector entity for Anthropic.
+/// </summary>
 public class AnthropicConnector(AppSettings settings) : LanguageModelConnector(settings.Anthropic)
 {
     private readonly AppSettings _appSettings = settings ?? throw new ArgumentNullException(nameof(settings));
@@ -19,12 +22,12 @@ public class AnthropicConnector(AppSettings settings) : LanguageModelConnector(s
             throw new InvalidOperationException("Missing configuration: Anthropic.");
         }
 
-        if (string.IsNullOrWhiteSpace(settings.ApiKey?.Trim()))
+        if (string.IsNullOrWhiteSpace(settings.ApiKey?.Trim()) == true)
         {
             throw new InvalidOperationException("Missing configuration: Anthropic:ApiKey.");
         }
 
-        if (string.IsNullOrWhiteSpace(settings.Model?.Trim()))
+        if (string.IsNullOrWhiteSpace(settings.Model?.Trim()) == true)
         {
             throw new InvalidOperationException("Missing configuration: Anthropic:Model.");
         }
@@ -53,17 +56,17 @@ public class AnthropicConnector(AppSettings settings) : LanguageModelConnector(s
         var client = new AnthropicClient() { Auth = new APIAuthentication(apiKey) };
 
         var chatClient = client.Messages
-                               .AsBuilder()
-                               .UseFunctionInvocation()
-                               .Use((messages, options, next, cancellationToken) =>
-                               {
-                                   options!.ModelId = model;
-                                   options!.MaxOutputTokens = maxTokens;
-                                   return next(messages, options, cancellationToken);
-                               })
-                               .Build();
+                                .AsBuilder()
+                                .UseFunctionInvocation()
+                                .Use((messages, options, next, cancellationToken) =>
+                                {
+                                    options!.ModelId = settings!.Model;
+                                    options.MaxOutputTokens = settings.MaxTokens;
+                                    return next(messages, options, cancellationToken);
+                                })
+                                .Build();
 
-        Console.WriteLine($"The {this._appSettings.ConnectorType} connector created with model: {model}");
+        Console.WriteLine($"The {this._appSettings.ConnectorType} connector created with model: {settings!.Model}");
 
         return await Task.FromResult(chatClient).ConfigureAwait(false);
     }

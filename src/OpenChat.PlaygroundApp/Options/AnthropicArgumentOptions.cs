@@ -20,7 +20,7 @@ public class AnthropicArgumentOptions : ArgumentOptions
     public string? Model { get; set; }
 
     /// <summary>
-    /// Gets or sets the maximum tokens for response.
+    /// Gets or sets the maximum number of tokens for Anthropic.
     /// </summary>
     public int? MaxTokens { get; set; }
 
