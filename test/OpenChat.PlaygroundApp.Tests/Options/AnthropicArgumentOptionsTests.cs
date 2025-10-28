@@ -11,7 +11,7 @@ public class AnthropicArgumentOptionsTests
 {
     private const string ApiKey = "test-api-key";
     private const string Model = "test-model";
-    private const int MaxTokens = 1000;
+    private const string MaxTokens = "1000";
     private const string ApiKeyConfigKey = "Anthropic:ApiKey";
     private const string ModelConfigKey = "Anthropic:Model";
     private const string MaxTokensConfigKey = "Anthropic:MaxTokens";
@@ -71,6 +71,8 @@ public class AnthropicArgumentOptionsTests
                    .AddInMemoryCollection(envDict!)      // Environment variables (medium priority)
                    .Build();
     }
+    
+    private static int? IntValueOf(string? value) => string.IsNullOrWhiteSpace(value) ? null : int.Parse(value);
 
     [Trait("Category", "UnitTest")]
     [Theory]
